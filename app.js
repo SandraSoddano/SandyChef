@@ -1543,7 +1543,13 @@
             
             // Update all text content
             updateAllContent(lang);
-            
+
+            // Refresh stats immediately with localized labels
+            updateStats(
+                window.recipes?.length || (Array.isArray(allRecipes) ? allRecipes.length : 0),
+                window.favoritesManager?.favorites?.length || 0
+            );
+
             // Update recipes with perfect images
             loadRecipes(lang);
         }
@@ -1562,9 +1568,30 @@
             
             // Update search placeholder
             document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            
+
             // Update floating button title
             document.getElementById('floatingAdd').title = t.btnNewRecipe;
+
+            // Ensure stat labels are localized
+            updateStatLabels(t);
+        }
+
+        function updateStatLabels(t) {
+            if (!t) return;
+
+            const labelMappings = {
+                statTotalRecipes: t.statTotalRecipes,
+                statCompleted: t.statCompleted,
+                statFavorites: t.statFavorites,
+                statSeals: t.statSeals
+            };
+
+            Object.entries(labelMappings).forEach(([id, text]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = text;
+                }
+            });
         }
 
         // Load and filter recipes with PERFECT matching images - DYNAMIC TRANSLATION
