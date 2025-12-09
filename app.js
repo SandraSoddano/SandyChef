@@ -1544,9 +1544,7 @@
             // Update all text content
             updateAllContent(lang);
 
-            updateStatsForCurrentView('all');
-
-            // Update recipes with perfect images
+            // Update recipes with perfect images and refresh stats AFTER data is ready
             loadRecipes(lang);
         }
 
@@ -1693,6 +1691,13 @@
         function updateStatsForCurrentView(viewMode = 'all', filteredCount = null) {
             const favoritesCount = window.favoritesManager ? window.favoritesManager.favorites.length : 0;
 
+            // Ensure we always have a valid total count source
+            const resolvedAllRecipes = Array.isArray(allRecipes) && allRecipes.length > 0
+                ? allRecipes
+                : (recipesByLanguage[currentLanguage] && recipesByLanguage[currentLanguage].length > 0
+                    ? recipesByLanguage[currentLanguage]
+                    : recipesByLanguage['en']);
+
             if (viewMode === 'favorites') {
                 updateStats(favoritesCount, favoritesCount);
                 return;
@@ -1703,8 +1708,8 @@
                 return;
             }
 
-            const totalRecipes = Array.isArray(allRecipes)
-                ? allRecipes.length
+            const totalRecipes = Array.isArray(resolvedAllRecipes)
+                ? resolvedAllRecipes.length
                 : (window.recipes?.length || 0);
 
             updateStats(totalRecipes, favoritesCount);
