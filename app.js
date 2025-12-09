@@ -1654,11 +1654,15 @@
         }
 
         // Update statistics display
-        function updateStats(filteredCount) {
-            document.getElementById('totalRecipes').textContent = filteredCount;
-            document.getElementById('completedRecipes').textContent = Math.floor(filteredCount * 0.75);
-            document.getElementById('favoriteRecipes').textContent = Math.floor(filteredCount * 0.3);
-            document.getElementById('sealsEarned').textContent = Math.floor(filteredCount * 0.5);
+        function updateStats(totalCount, favoriteCountOverride = null) {
+            const favoritesCount = favoriteCountOverride !== null
+                ? favoriteCountOverride
+                : (window.favoritesManager ? window.favoritesManager.favorites.length : 0);
+
+            document.getElementById('totalRecipes').textContent = totalCount;
+            document.getElementById('completedRecipes').textContent = 0;
+            document.getElementById('favoriteRecipes').textContent = favoritesCount;
+            document.getElementById('sealsEarned').textContent = 0;
         }
 
 // incluir daqui
