@@ -772,7 +772,7 @@
             it: []  // Will be populated dynamically
         };
 
-        let currentLanguage = 'en';
+        let currentLanguage = 'pt';
         let currentDifficultyFilter = 'tutte';
         let currentCategoryFilter = 'all';
         let allRecipes = [];
@@ -1997,12 +1997,15 @@ function showSection(section) {
         //    console.log('All 51+ recipes now have PERFECT matching images!');
         //});
 
-	function initSandyChef() {
-         updateAllContent('en');
-         loadRecipes('en');
-  	 console.log('🍷✨ SandyChef Perfect Images loaded!');
-	 console.log('All 51+ recipes now have PERFECT matching images!');
-	}
+        function initSandyChef() {
+         const activeLanguageButton = document.querySelector('.lang-btn.active');
+         const initialLanguage = activeLanguageButton?.dataset.lang || currentLanguage;
+
+         switchLanguage(initialLanguage);
+
+         console.log('🍷✨ SandyChef Perfect Images loaded!');
+         console.log('All 51+ recipes now have PERFECT matching images!');
+        }
 
 	// If the document is still loading, wait for DOMContentLoaded.
 	// If it is already loaded, run immediately.
