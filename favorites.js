@@ -176,7 +176,9 @@ getFavoriteRecipes() {
             pageTitle.textContent = `❤️ ${favoritesLabel} (${favoriteRecipes.length})`;
         }
 
-        if (typeof updateStats === 'function') {
+        if (typeof updateStatsForCurrentView === 'function') {
+            updateStatsForCurrentView('favorites');
+        } else if (typeof updateStats === 'function') {
             updateStats(favoriteRecipes.length, favoriteRecipes.length);
         }
     }
