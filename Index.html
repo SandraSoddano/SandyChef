@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍷✨ SandyChef™ - Perfect Recipe Images</title>
+
+    <link rel="stylesheet" href="../src/css/sandychef.css" />
+ 
+</head>
+
+
+
+<body>
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">🍷✨ SandyChef™</div>
+            <div class="tagline" id="tagline">Transforme o Cozinhar em Arte</div>
+            
+            <!-- LANGUAGE SELECTOR -->
+            <div class="language-selector">
+                <button class="lang-btn" onclick="switchLanguage('en')" data-lang="en">🇺🇸 EN</button>
+                <button class="lang-btn" onclick="switchLanguage('es')" data-lang="es">🇪🇸 ES</button>
+                <button class="lang-btn" onclick="switchLanguage('fr')" data-lang="fr">🇫🇷 FR</button>
+                <button class="lang-btn active" onclick="switchLanguage('pt')" data-lang="pt">🇧🇷 PT</button>
+                <button class="lang-btn" onclick="switchLanguage('it')" data-lang="it">🇮🇹 IT</button>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title" id="navLibraryTitle">📚 Biblioteca de Receitas</div>
+                <div class="nav-item" onclick="showSection('all-recipes')">
+                    <span class="nav-icon">🍽️</span>
+                    <span id="navAllRecipes">Todas as Receitas</span>
+                </div>
+                <div class="nav-item" onclick="showSection('favorites')">
+                    <span class="nav-icon">❤️</span>
+                    <span id="navFavorites">Favoritas</span>
+                </div>
+                <div class="nav-item" onclick="showSection('my-recipes')">
+                    <span class="nav-icon">👩‍🍳</span>
+                    <span id="navMyCreations">Minhas Criações</span>
+                </div>
+                <div class="nav-item" onclick="showSection('recent')">
+                    <span class="nav-icon">🕒</span>
+                    <span id="navRecent">Recentes</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title" id="navCategoriesTitle">🏷️ Categorias</div>
+                <div class="nav-item" onclick="filterByCategory('meat')">
+                    <span class="nav-icon">🥩</span>
+                    <span id="navMeat">Carnes</span>
+                </div>
+                <div class="nav-item" onclick="filterByCategory('poultry')">
+                    <span class="nav-icon">🍗</span>
+                    <span id="navPoultry">Aves</span>
+                </div>
+                <div class="nav-item" onclick="filterByCategory('pasta')">
+                    <span class="nav-icon">🍝</span>
+                    <span id="navPasta">Massas</span>
+                </div>
+                <div class="nav-item" onclick="filterByCategory('desserts')">
+                    <span class="nav-icon">🍰</span>
+                    <span id="navDesserts">Doces</span>
+                </div>
+                <div class="nav-item active" onclick="filterByCategory('vegetarian')">
+                    <span class="nav-icon">🥗</span>
+                    <span id="navVegetarian">Vegetariano</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title" id="navQuickActionsTitle">⚡ Ações Rápidas</div>
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="createNewRecipe()">
+                        <span>➕</span>
+                        <span id="btnNewRecipe">Nova Receita</span>
+                    </button>
+                    <button class="action-btn" onclick="importRecipe()">
+                        <span>📥</span>
+                        <span id="btnImport">Importar</span>
+                    </button>
+                    <button class="action-btn" onclick="randomRecipe()">
+                        <span>🎲</span>
+                        <span id="btnSurprise">Surpresa!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content" data-dashlane-rid="b507bef55c22b3ec">
+            <div class="content-header">
+                <h1 class="page-title" id="pageTitle">Todas as Receitas</h1>
+                <div class="view-toggle">
+                    <button class="toggle-btn active" onclick="setView('grid')">🔲 <span id="btnGrid">Grade</span></button>
+                    <button class="toggle-btn" onclick="setView('list')">📋 <span id="btnList">Lista</span></button>
+                </div>
+            </div>
+
+            <!-- SEARCH AND FILTERS -->
+            <input type="text" class="search-bar" placeholder="🔍 Buscar receitas..." id="searchInput" oninput="searchRecipes()" data-dashlane-rid="40ddcfa7d319ace1">
+            
+            <div class="filter-tags">
+                <div class="filter-tag active" onclick="filterByDifficulty('tutte')" id="filterTutte">Todas</div>
+                <div class="filter-tag" onclick="filterByDifficulty('facile')" id="filterFacile">Fácil</div>
+                <div class="filter-tag" onclick="filterByDifficulty('intermedio')" id="filterIntermedio">Intermediário</div>
+                <div class="filter-tag" onclick="filterByDifficulty('avanzato')" id="filterAvanzato">Avançado</div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRecipes">6</div>
+                    <div class="stat-label" id="statTotalRecipes">Total de Receitas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedRecipes">4</div>
+                    <div class="stat-label" id="statCompleted">Completadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="favoriteRecipes">1</div>
+                    <div class="stat-label" id="statFavorites">Favoritas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="sealsEarned">3</div>
+                    <div class="stat-label" id="statSeals">Selos Conquistados</div>
+                </div>
+            </div>
+
+            <!-- RECIPES GRID -->
+            <div class="recipe-grid" id="recipesGrid">
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://drivemehungry.com/wp-content/uploads/2022/05/caesar-salad-f.jpg" alt="Salada Caesar Tradicional" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Salada Caesar Tradicional</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 20 min</span>
+                        <span>📊 Tutte</span>
+                        <span>👥 4</span>
+                    </div>
+                    <div class="recipe-description">Alface romana fresca com molho Caesar caseiro, queijo parmesão e croutons crocantes.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="4e05697bf1951a4e">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="315176806e8d2ed8">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="45b8a432df63ad0c">🗑️ Excluir</button>
+                    </div>
+                </div>
+            
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://www.tasteoftravel.at/wp-content/uploads/Rezept-Caprese-Salat.jpg" alt="Salada Caprese Simples" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Salada Caprese Simples</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 15 min</span>
+                        <span>📊 Fácil</span>
+                        <span>👥 4</span>
+                    </div>
+                    <div class="recipe-description">Mozzarella fresca, tomates e manjericão regados com azeite e vinagre balsâmico.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="34cc59337c98e439">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="7f66683edda93984">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="fdb7ae85a0f54cc4">🗑️ Excluir</button>
+                    </div>
+                </div>
+            
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://bellyfull.net/wp-content/uploads/2021/01/Stuffed-Peppers-blog.jpg" alt="Pimentões Recheados" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Pimentões Recheados</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 45 min</span>
+                        <span>📊 Fácil</span>
+                        <span>👥 4</span>
+                    </div>
+                    <div class="recipe-description">Pimentões coloridos recheados com arroz, vegetais e ervas.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="99a75ce57f8f9a57">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="08b661c13704173b">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="cbfcc24ed5a8d85d">🗑️ Excluir</button>
+                    </div>
+                </div>
+            
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://www.recipejoyful.com/wp-content/uploads/2025/07/Eggplant-Parmesan.webp" alt="Berinjela à Parmegiana" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Berinjela à Parmegiana</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 70 min</span>
+                        <span>📊 Intermediário</span>
+                        <span>👥 6</span>
+                    </div>
+                    <div class="recipe-description">Camadas de berinjela empanada com molho de tomate e queijo derretido.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="9a0e3715a447da8f">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="47bed9c058db7d40">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="ca6d7f0a3637e566">🗑️ Excluir</button>
+                    </div>
+                </div>
+            
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://evergreenkitchen.ca/wp-content/uploads/2021/10/Creamy-Mushroom-Risotto-0-4X5.jpg" alt="Risotto de Cogumelos" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Risotto de Cogumelos</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 45 min</span>
+                        <span>📊 Intermediário</span>
+                        <span>👥 4</span>
+                    </div>
+                    <div class="recipe-description">Arroz Arborio cremoso com cogumelos selvagens e queijo parmesão.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="62a9ac0d6629b012">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="b2891b0cfcefb9ef">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="c442bafd5ec529e3">🗑️ Excluir</button>
+                    </div>
+                </div>
+            
+                <div class="recipe-card">
+                    <div class="category-badge">Vegetariano</div>
+                    <img src="https://www.sprinklesandsprouts.com/wp-content/uploads/2022/04/RatatouilleSQ.jpg" alt="Ratatouille de Vegetais" class="recipe-image" loading="lazy">
+                    <div class="recipe-title">Ratatouille de Vegetais</div>
+                    <div class="recipe-meta">
+                        <span>⏱️ 90 min</span>
+                        <span>📊 Avançado</span>
+                        <span>👥 6</span>
+                    </div>
+                    <div class="recipe-description">Vegetais cozidos provençais tradicionais dispostos em belas camadas.</div>
+                    <div class="recipe-actions">
+                        <button class="recipe-btn view-btn" data-dashlane-label="true" data-dashlane-rid="f9a1a18028c3eb39">👁️ Ver</button>
+                        <button class="recipe-btn edit-btn" data-dashlane-label="true" data-dashlane-rid="def9d1dd4a01e230">✏️ Editar</button>
+                        <button class="recipe-btn delete-btn" data-dashlane-label="true" data-dashlane-rid="baa506da0b97978f">🗑️ Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FLOATING ADD BUTTON -->
+    <button class="floating-add" onclick="createNewRecipe()" id="floatingAdd" title="Nova Receita">
+        ➕
+    </button>
+
+    <!-- Recipe data (must load first) -->
+    <script src="../src/js/recipes.js"></script>
+
+    <!-- JS principal da aplicação -->
+    <script src="../src/js/app.js"></script>
+
+    <script src="../src/js/favorites.js"></script>
+    <script src="../src/js/recipe-manager.js"></script>
+
+
+    <!-- ADICIONAR APENAS ESTE SCRIPT AQUI -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof FavoritesManager !== 'undefined') {
+                window.favoritesManager = new FavoritesManager();
+                console.log('✅ Sistema de Favoritos SandyChef inicializado!');
+            }
+        });
+    </script>
+
+
+
+</body></html>
+<!-- MODAL PARA ADICIONAR RECEITA -->
+<div id="addRecipeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>➕ Adicionar Nova Receita</h2>
+            <span class="close" onclick="closeAddRecipeModal()">&times;</span>
+        </div>
+        <form id="addRecipeForm">
+            <div class="form-group">
+                <label>Título da Receita:</label>
+                <input type="text" id="recipeTitle" required>
+            </div>
+            <div class="form-group">
+                <label>Descrição:</label>
+                <input type="text" id="recipeSubtitle" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tempo:</label>
+                    <input type="text" id="recipeTime" placeholder="ex: 30 min" required>
+                </div>
+                <div class="form-group">
+                    <label>Dificuldade:</label>
+                    <select id="recipeDifficulty" required>
+                        <option value="Facile">Fácil</option>
+                        <option value="Intermedio">Intermediário</option>
+                        <option value="Avanzato">Avançado</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Porções:</label>
+                    <input type="text" id="recipeServings" placeholder="ex: 4 pessoas" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Ingredientes (um por linha):</label>
+                <textarea id="recipeIngredients" rows="6" placeholder="200g de farinha&#10;2 ovos&#10;1 xícara de leite"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Modo de Preparo:</label>
+                <textarea id="recipeInstructions" rows="8" placeholder="1. Misture os ingredientes secos...&#10;2. Adicione os líquidos..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="closeAddRecipeModal()">Cancelar</button>
+                <button type="submit">Salvar Receita</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #d4af37;
+}
+
+.close {
+    font-size: 2rem;
+    cursor: pointer;
+    color: #d4af37;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #d4af37;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.form-actions button[type="submit"] {
+    background: linear-gradient(45deg, #d4af37, #ffd700);
+    color: #1a1a2e;
+}
+
+.form-actions button[type="button"] {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+}
+
+.form-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+</style>
+
+<script>
+// Funções para o modal de adicionar receita
+function openAddRecipeModal() {
+    document.getElementById('addRecipeModal').style.display = 'flex';
+}
+
+function closeAddRecipeModal() {
+    document.getElementById('addRecipeModal').style.display = 'none';
+    document.getElementById('addRecipeForm').reset();
+}
+
+// Submeter nova receita
+document.getElementById('addRecipeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const newRecipe = {
+        title: document.getElementById('recipeTitle').value,
+        subtitle: document.getElementById('recipeSubtitle').value,
+        time: document.getElementById('recipeTime').value,
+        difficulty: document.getElementById('recipeDifficulty').value,
+        servings: document.getElementById('recipeServings').value,
+        ingredients: document.getElementById('recipeIngredients').value.split('\n').filter(i => i.trim()),
+        instructions: document.getElementById('recipeInstructions').value.split('\n').filter(i => i.trim()),
+        tags: ["custom"],
+        image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=300&fit=crop"
+    };
+    
+    const savedRecipe = recipeManager.addRecipe(newRecipe);
+    console.log('Receita adicionada:', savedRecipe);
+    
+    // Fechar modal e atualizar lista
+    closeAddRecipeModal();
+    
+    // Recarregar receitas (você pode implementar uma função mais elegante)
+    alert('✅ Receita adicionada com sucesso!');
+    location.reload();
+});
+
+// Conectar botão "Nova Receita" ao modal
+document.addEventListener('DOMContentLoaded', function() {
+    // Encontrar botão "Nova Receita" e conectar
+    const newRecipeButtons = document.querySelectorAll('button');
+    newRecipeButtons.forEach(btn => {
+        if (btn.textContent.includes('Nova Receita') || btn.textContent.includes('New Recipe')) {
+            btn.onclick = openAddRecipeModal;
+        }
+    });
+});
+</script>
+
+<script>
+// 🍷✨ SandyChef™ - Inicialização do Sistema
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🍷✨ Inicializando SandyChef...');
+    
+    // Aguardar um pouco para garantir que todos os scripts carregaram
+    setTimeout(() => {
+        // Verificar se os sistemas estão disponíveis
+        if (window.favoritesManager) {
+            console.log('✅ Sistema de Favoritos: ATIVO');
+            // Forçar inicialização se necessário
+            if (typeof favoritesManager.setupFavorites === 'function') {
+                favoritesManager.setupFavorites();
+            }
+        } else {
+            console.log('❌ Sistema de Favoritos: NÃO ENCONTRADO');
+        }
+        
+        if (window.recipeManager) {
+            console.log('✅ Gerenciador de Receitas: ATIVO');
+        } else {
+            console.log('❌ Gerenciador de Receitas: NÃO ENCONTRADO');
+        }
+        
+        // Adicionar botões de favorito manualmente se necessário
+        const recipeCards = document.querySelectorAll('.recipe-card');
+        console.log(`📋 Encontradas ${recipeCards.length} receitas`);
+        
+        if (recipeCards.length > 0 && window.favoritesManager) {
+            console.log('🔄 Adicionando botões de favorito...');
+            favoritesManager.updateFavoriteButtons();
+        }
+        
+    }, 500); // Aguardar 500ms
+});
+</script>
+
+<script>
+//  SandyChef - Inicializaçao do Sistema
+document.addEventListener('DOMContentLoaded', function() {
+    console.log(' Inicializando SandyChef...');
+
+    // Aguardar um pouco para garantir que todos os scripts carregaram
+    setTimeout(() => {
+        // Verificar se os sistemas estao disponíveis
+        if (window.favoritesManager) {
+            console.log(' Sistema de Favoritos: ATIVO');
+            // Forçar inicializaçao se necessário
+            if (typeof favoritesManager.setupFavorites === 'function') {
+                favoritesManager.setupFavorites();
+            }
+        } else {
+            console.log(' Sistema de Favoritos: NAO ENCONTRADO');
+        }
+
+        if (window.recipeManager) {
+            console.log(' Gerenciador de Receitas: ATIVO');
+        } else {
+            console.log(' Gerenciador de Receitas: NAO ENCONTRADO');
+        }
+
+        // Adicionar botoes de favorito manualmente se necessário
+        const recipeCards = document.querySelectorAll('.recipe-card');
+        console.log(` Encontradas ${recipeCards.length} receitas`);
+
+        if (recipeCards.length > 0 && window.favoritesManager) {
+            console.log(' Adicionando botoes de favorito...');
+            favoritesManager.updateFavoriteButtons();
+        }
+
+    }, 500); // Aguardar 500ms
+});
+</script>
