@@ -129,7 +129,7 @@ getFavoriteRecipes() {
 
     showFavoritesOnly() {
         console.log('🔍 DEBUG: showFavoritesOnly chamada');
-        
+
         const favoriteRecipes = this.getFavoriteRecipes();
         
         if (favoriteRecipes.length === 0) {
@@ -143,10 +143,9 @@ getFavoriteRecipes() {
 
         console.log('🔍 DEBUG: Renderizando favoritas');
 
-        // const t = window.translations[window.currentLanguage] || {};
-	const t = (window.translations && window.translations[window.currentLanguage]) ? 
-	    window.translations[window.currentLanguage] : 
-    	    { btnView: 'Ver', btnEdit: 'Editar', btnDelete: 'Excluir' };
+        const t = (window.translations && window.translations[window.currentLanguage]) ?
+            window.translations[window.currentLanguage] :
+            { btnView: 'Ver', btnEdit: 'Editar', btnDelete: 'Excluir', navFavorites: 'Favoritos' };
 
         const grid = document.getElementById('recipesGrid');
         
@@ -170,10 +169,15 @@ getFavoriteRecipes() {
         `).join('');
 
         setTimeout(() => this.updateFavoriteButtons(), 100);
-        
+
         const pageTitle = document.querySelector('.page-title');
         if (pageTitle) {
-            pageTitle.textContent = `❤️ Favoritos (${favoriteRecipes.length})`;
+            const favoritesLabel = t.navFavorites || 'Favoritos';
+            pageTitle.textContent = `❤️ ${favoritesLabel} (${favoriteRecipes.length})`;
+        }
+
+        if (typeof updateStats === 'function') {
+            updateStats(favoriteRecipes.length, favoriteRecipes.length);
         }
     }
 
@@ -199,17 +203,14 @@ getFavoriteRecipes() {
 
 // adicionar nova funcao updateallstats
 updateAllStats() {
-    // Total de receitas (dinâmico)
-    const totalRecipes = (typeof allRecipes !== 'undefined') ? allRecipes.length : 51;
-    
-    // Favoritos (dinâmico)
+    const totalRecipes = (typeof allRecipes !== 'undefined' && Array.isArray(allRecipes)) ? allRecipes.length : this.favorites.length;
     const favoritesCount = this.favorites.length;
-    
-    // Completed e Seals (ainda não implementados = 0)
-    const completedCount = 0;
-    const sealsCount = 0;
-    
-    // Atualizar APENAS os números
+
+    if (typeof updateStats === 'function') {
+        updateStats(totalRecipes, favoritesCount);
+        return;
+    }
+
     this.updateElementById(['totalRecipes'], totalRecipes);
     this.updateElementById(['favoritesCount', 'favoriteRecipes'], favoritesCount);
     this.updateElementById(['completedRecipes'], 0);
