@@ -1544,11 +1544,7 @@
             // Update all text content
             updateAllContent(lang);
 
-            // Refresh stats immediately with localized labels
-            updateStats(
-                window.recipes?.length || (Array.isArray(allRecipes) ? allRecipes.length : 0),
-                window.favoritesManager?.favorites?.length || 0
-            );
+            updateStatsForCurrentView('all');
 
             // Update recipes with perfect images
             loadRecipes(lang);
@@ -1606,12 +1602,13 @@
                 // Translate all 51 recipes to target language
                 allRecipes = baseRecipes.map(recipe => translateRecipe(recipe, lang));
             }
-            
+
+            updateStatsForCurrentView('all');
             filterAndDisplayRecipes();
         }
 
         // Filter and display recipes based on current filters
-        function filterAndDisplayRecipes() {
+        function filterAndDisplayRecipes(isUserFilter = false) {
             const t = translations[currentLanguage];
             let filteredRecipes = [...allRecipes];
 
@@ -1634,8 +1631,9 @@
 
             }
 
-            // Update stats
-            updateStats(filteredRecipes.length);
+            if (isUserFilter) {
+                updateStatsForCurrentView('filtered', filteredRecipes.length);
+            }
 
             // Display filtered recipes
             const grid = document.getElementById('recipesGrid');
@@ -1692,6 +1690,26 @@
             document.getElementById('sealsEarned').textContent = 0;
         }
 
+        function updateStatsForCurrentView(viewMode = 'all', filteredCount = null) {
+            const favoritesCount = window.favoritesManager ? window.favoritesManager.favorites.length : 0;
+
+            if (viewMode === 'favorites') {
+                updateStats(favoritesCount, favoritesCount);
+                return;
+            }
+
+            if (viewMode === 'filtered' && typeof filteredCount === 'number') {
+                updateStats(filteredCount, favoritesCount);
+                return;
+            }
+
+            const totalRecipes = Array.isArray(allRecipes)
+                ? allRecipes.length
+                : (window.recipes?.length || 0);
+
+            updateStats(totalRecipes, favoritesCount);
+        }
+
 // incluir daqui
 
 function showSection(section) {
@@ -1718,14 +1736,15 @@ function showSection(section) {
     if (section === 'all-recipes') {
         currentCategoryFilter = 'all';
         currentDifficultyFilter = 'tutte';
-        
+
         // Reset difficulty filter buttons
         document.querySelectorAll('.filter-tag').forEach(tag => {
             tag.classList.remove('active');
         });
         document.getElementById('filterTutte').classList.add('active');
-        
+
         // Refresh display
+        updateStatsForCurrentView('all');
         filterAndDisplayRecipes();
     }
 }
@@ -1741,9 +1760,9 @@ function showSection(section) {
             
             // Set current category filter
             currentCategoryFilter = category;
-            
+
             // Apply filter and refresh display
-            filterAndDisplayRecipes();
+            filterAndDisplayRecipes(true);
         }
 
         function filterByDifficulty(difficulty) {
@@ -1755,9 +1774,9 @@ function showSection(section) {
             
             // Set current difficulty filter
             currentDifficultyFilter = difficulty;
-            
+
             // Apply filter and refresh display
-            filterAndDisplayRecipes();
+            filterAndDisplayRecipes(true);
         }
 
         function createNewRecipe() {
