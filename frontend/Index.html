@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍷✨ SandyChef™ - Perfect Recipe Images</title>
 
-    <link rel="stylesheet" href="./sandychef.css" />
+    <link rel="stylesheet" href="../src/css/sandychef.css" />
  
 </head>
 
@@ -30,19 +30,19 @@
             
             <div class="nav-section">
                 <div class="nav-title" id="navLibraryTitle">📚 Biblioteca de Receitas</div>
-                <div class="nav-item" onclick="showSection('all-recipes')">
+                <div class="nav-item" onclick="showSection('all-recipes', event)">
                     <span class="nav-icon">🍽️</span>
                     <span id="navAllRecipes">Todas as Receitas</span>
                 </div>
-                <div class="nav-item" onclick="showSection('favorites')">
+                <div class="nav-item" onclick="showSection('favorites', event)">
                     <span class="nav-icon">❤️</span>
                     <span id="navFavorites">Favoritas</span>
                 </div>
-                <div class="nav-item" onclick="showSection('my-recipes')">
+                <div class="nav-item" onclick="showSection('my-recipes', event)">
                     <span class="nav-icon">👩‍🍳</span>
                     <span id="navMyCreations">Minhas Criações</span>
                 </div>
-                <div class="nav-item" onclick="showSection('recent')">
+                <div class="nav-item" onclick="showSection('recent', event)">
                     <span class="nav-icon">🕒</span>
                     <span id="navRecent">Recentes</span>
                 </div>
@@ -50,23 +50,23 @@
 
             <div class="nav-section">
                 <div class="nav-title" id="navCategoriesTitle">🏷️ Categorias</div>
-                <div class="nav-item" onclick="filterByCategory('meat')">
+                <div class="nav-item" onclick="filterByCategory('meat', event)">
                     <span class="nav-icon">🥩</span>
                     <span id="navMeat">Carnes</span>
                 </div>
-                <div class="nav-item" onclick="filterByCategory('poultry')">
+                <div class="nav-item" onclick="filterByCategory('poultry', event)">
                     <span class="nav-icon">🍗</span>
                     <span id="navPoultry">Aves</span>
                 </div>
-                <div class="nav-item" onclick="filterByCategory('pasta')">
+                <div class="nav-item" onclick="filterByCategory('pasta', event)">
                     <span class="nav-icon">🍝</span>
                     <span id="navPasta">Massas</span>
                 </div>
-                <div class="nav-item" onclick="filterByCategory('desserts')">
+                <div class="nav-item" onclick="filterByCategory('desserts', event)">
                     <span class="nav-icon">🍰</span>
                     <span id="navDesserts">Doces</span>
                 </div>
-                <div class="nav-item active" onclick="filterByCategory('vegetarian')">
+                <div class="nav-item active" onclick="filterByCategory('vegetarian', event)">
                     <span class="nav-icon">🥗</span>
                     <span id="navVegetarian">Vegetariano</span>
                 </div>
@@ -96,8 +96,8 @@
             <div class="content-header">
                 <h1 class="page-title" id="pageTitle">Todas as Receitas</h1>
                 <div class="view-toggle">
-                    <button class="toggle-btn active" onclick="setView('grid')">🔲 <span id="btnGrid">Grade</span></button>
-                    <button class="toggle-btn" onclick="setView('list')">📋 <span id="btnList">Lista</span></button>
+                    <button class="toggle-btn active" onclick="setView('grid', event)">🔲 <span id="btnGrid">Grade</span></button>
+                    <button class="toggle-btn" onclick="setView('list', event)">📋 <span id="btnList">Lista</span></button>
                 </div>
             </div>
 
@@ -105,10 +105,10 @@
             <input type="text" class="search-bar" placeholder="🔍 Buscar receitas..." id="searchInput" oninput="searchRecipes()" data-dashlane-rid="40ddcfa7d319ace1">
             
             <div class="filter-tags">
-                <div class="filter-tag active" onclick="filterByDifficulty('tutte')" id="filterTutte">Todas</div>
-                <div class="filter-tag" onclick="filterByDifficulty('facile')" id="filterFacile">Fácil</div>
-                <div class="filter-tag" onclick="filterByDifficulty('intermedio')" id="filterIntermedio">Intermediário</div>
-                <div class="filter-tag" onclick="filterByDifficulty('avanzato')" id="filterAvanzato">Avançado</div>
+                <div class="filter-tag active" onclick="filterByDifficulty('tutte', event)" id="filterTutte">Todas</div>
+                <div class="filter-tag" onclick="filterByDifficulty('facile', event)" id="filterFacile">Fácil</div>
+                <div class="filter-tag" onclick="filterByDifficulty('intermedio', event)" id="filterIntermedio">Intermediário</div>
+                <div class="filter-tag" onclick="filterByDifficulty('avanzato', event)" id="filterAvanzato">Avançado</div>
             </div>
 
             <!-- STATS -->
@@ -244,13 +244,13 @@
     </button>
 
     <!-- Recipe data (must load first) -->
-    <script src="./recipes.js"></script>
+    <script src="../src/js/recipes.js"></script>
 
     <!-- JS principal da aplicação -->
-    <script src="./app.js"></script>
+    <script src="../src/js/app.js"></script>
 
-    <script src="./favorites.js"></script>
-    <script src="./recipe-manager.js"></script>
+    <script src="../src/js/favorites.js"></script>
+    <script src="../src/js/recipe-manager.js"></script>
 
 
     <!-- ADICIONAR APENAS ESTE SCRIPT AQUI -->
