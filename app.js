@@ -1431,11 +1431,38 @@
             }
         };
 
+        // Provide a stable way to resolve any translated title back to its canonical English form
+        function getCanonicalRecipeTitle(title) {
+            if (!title) return '';
+
+            const normalizedTitle = title.trim();
+
+            // If it already exists in the English catalog, return as-is
+            const isEnglishTitle = recipesByLanguage.en?.some(recipe => recipe.title === normalizedTitle);
+            if (isEnglishTitle) {
+                return normalizedTitle;
+            }
+
+            // Try to find the matching English key from translations
+            for (const [englishTitle, translations] of Object.entries(recipeTranslations.titles)) {
+                if (englishTitle === normalizedTitle) return englishTitle;
+
+                if (Object.values(translations).includes(normalizedTitle)) {
+                    return englishTitle;
+                }
+            }
+
+            return normalizedTitle;
+        }
+
+        // Expose helper so favorites.js can generate consistent IDs across languages
+        window.getCanonicalRecipeTitle = getCanonicalRecipeTitle;
+
         // DYNAMIC RECIPE TRANSLATION FUNCTION
         function translateRecipe(recipe, targetLang) {
-            if (targetLang === 'en') return recipe; // Return original if English
-            
-            const translated = { ...recipe };
+            if (targetLang === 'en') return { ...recipe, baseTitle: recipe.baseTitle || recipe.title }; // Return original if English
+
+            const translated = { ...recipe, baseTitle: recipe.baseTitle || recipe.title };
             
             // Translate title
             if (recipeTranslations.titles[recipe.title] && recipeTranslations.titles[recipe.title][targetLang]) {
@@ -1591,7 +1618,10 @@
         // Load and filter recipes with PERFECT matching images - DYNAMIC TRANSLATION
         function loadRecipes(lang) {
             // Always start with English recipes as base
-            const baseRecipes = recipesByLanguage['en'];
+            const baseRecipes = recipesByLanguage['en'].map(recipe => ({
+                ...recipe,
+                baseTitle: recipe.baseTitle || recipe.title
+            }));
             
             // If English, use directly
             if (lang === 'en') {
@@ -1636,7 +1666,7 @@
             // Display filtered recipes
             const grid = document.getElementById('recipesGrid');
             grid.innerHTML = filteredRecipes.map((recipe, index) => `
-                <div class="recipe-card">
+                <div class="recipe-card" data-base-title="${recipe.baseTitle || recipe.title}">
                     <div class="category-badge">${recipe.category}</div>
                     <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image" loading="lazy">
                     <div class="recipe-title">${recipe.title}</div>
