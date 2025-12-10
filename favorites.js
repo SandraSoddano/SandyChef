@@ -26,7 +26,24 @@ class FavoritesManager {
         }
     }
 
+    getCanonicalTitle(recipeTitle) {
+        if (typeof window.getCanonicalRecipeTitle === 'function') {
+            return window.getCanonicalRecipeTitle(recipeTitle);
+        }
+
+        return recipeTitle;
+    }
+
     generateRecipeId(recipeTitle) {
+        const canonicalTitle = this.getCanonicalTitle(recipeTitle);
+
+        return 'recipe_' + canonicalTitle.toLowerCase()
+            .replace(/[^a-z0-9]/g, '_')
+            .replace(/_+/g, '_')
+            .replace(/^_|_$/g, '');
+    }
+
+    generateLegacyId(recipeTitle) {
         return 'recipe_' + recipeTitle.toLowerCase()
             .replace(/[^a-z0-9]/g, '_')
             .replace(/_+/g, '_')
@@ -34,15 +51,27 @@ class FavoritesManager {
     }
 
     isFavorite(recipeTitle) {
-        const recipeId = this.generateRecipeId(recipeTitle);
-        return this.favorites.includes(recipeId);
+        const canonicalId = this.generateRecipeId(recipeTitle);
+
+        if (this.favorites.includes(canonicalId)) {
+            return true;
+        }
+
+        // Backward compatibility: check using the raw title in case older IDs were saved
+        const legacyId = this.generateLegacyId(recipeTitle);
+
+        return this.favorites.includes(legacyId);
     }
 
-    toggleFavorite(recipeTitle) {
-        const recipeId = this.generateRecipeId(recipeTitle);
-        const index = this.favorites.indexOf(recipeId);
-        
+    toggleFavorite(recipeTitle, baseTitle = null) {
+        const canonicalTitle = baseTitle || recipeTitle;
+        const recipeId = this.generateRecipeId(canonicalTitle);
+        const legacyId = this.generateLegacyId(recipeTitle);
+        const index = this.favorites.findIndex(id => id === recipeId || id === legacyId);
+
         if (index === -1) {
+            // Ensure we don't accumulate old legacy IDs alongside the canonical one
+            this.favorites = this.favorites.filter(id => id !== legacyId);
             this.favorites.push(recipeId);
             this.showNotification(`❤️ ${recipeTitle} adicionado aos favoritos!`);
         } else {
@@ -52,7 +81,7 @@ class FavoritesManager {
         
         this.saveFavorites();
         this.updateFavoriteButtons();
-        return this.isFavorite(recipeTitle);
+        return this.isFavorite(canonicalTitle);
     }
 
 //    updateFavoriteCount() {
@@ -67,25 +96,26 @@ class FavoritesManager {
     updateFavoriteButtons() {
         console.log("🔄 Atualizando botões de favorito...");
         const recipeCards = document.querySelectorAll('.recipe-card');
-        
+
         recipeCards.forEach(card => {
             const titleElement = card.querySelector('.recipe-title');
             if (!titleElement) return;
-            
+
             const title = titleElement.textContent.trim();
+            const baseTitle = card.dataset.baseTitle || title;
             let favoriteBtn = card.querySelector('.favorite-btn');
-            
+
             if (!favoriteBtn) {
                 favoriteBtn = document.createElement('button');
                 favoriteBtn.className = 'favorite-btn';
                 favoriteBtn.onclick = (e) => {
                     e.stopPropagation();
-                    this.toggleFavorite(title);
+                    this.toggleFavorite(title, baseTitle);
                 };
                 card.appendChild(favoriteBtn);
             }
 
-            const isFav = this.isFavorite(title);
+            const isFav = this.isFavorite(baseTitle);
             favoriteBtn.innerHTML = isFav ? '❤️' : '🤍';
             favoriteBtn.title = isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos';
         });
@@ -116,7 +146,8 @@ getFavoriteRecipes() {
     console.log('📊 DEBUG: Total de receitas disponíveis:', recipes.length);
     
     const favoriteRecipes = recipes.filter(recipe => {
-        const isFav = this.isFavorite(recipe.title);
+        const titleForCheck = recipe.baseTitle || recipe.title;
+        const isFav = this.isFavorite(titleForCheck);
         if (isFav) console.log('✅ Receita favorita:', recipe.title);
         return isFav;
     });
@@ -150,7 +181,7 @@ getFavoriteRecipes() {
         const grid = document.getElementById('recipesGrid');
         
         grid.innerHTML = favoriteRecipes.map(recipe => `
-            <div class="recipe-card">
+            <div class="recipe-card" data-base-title="${recipe.baseTitle || recipe.title}">
                 <div class="category-badge">${recipe.category}</div>
                 <img src="${recipe.image}" alt="${recipe.title}" class="recipe-image" loading="lazy">
                 <div class="recipe-title">${recipe.title}</div>
