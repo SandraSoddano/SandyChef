@@ -1747,13 +1747,18 @@
 
 // incluir daqui
 
-function showSection(section) {
+function showSection(section, evt = null) {
     console.log('🔍 DEBUG: showSection chamada com:', section);
-    
+
+    const currentEvent = evt || window.event;
+
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
     });
-    event.target.closest('.nav-item').classList.add('active');
+
+    if (currentEvent?.target) {
+        currentEvent.target.closest('.nav-item')?.classList.add('active');
+    }
 
     // ADICIONAR ESTE BLOCO:
     if (section === 'favorites') {
@@ -1786,12 +1791,17 @@ function showSection(section) {
 
 // ate aqui
 
-        function filterByCategory(category) {
-            // Update active category button
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.closest('.nav-item').classList.add('active');
+function filterByCategory(category, evt = null) {
+    const currentEvent = evt || window.event;
+
+    // Update active category button
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    if (currentEvent?.target) {
+        currentEvent.target.closest('.nav-item')?.classList.add('active');
+    }
             
             // Set current category filter
             currentCategoryFilter = category;
@@ -1800,12 +1810,17 @@ function showSection(section) {
             filterAndDisplayRecipes(true);
         }
 
-        function filterByDifficulty(difficulty) {
-            // Update active difficulty button
-            document.querySelectorAll('.filter-tag').forEach(tag => {
-                tag.classList.remove('active');
-            });
-            event.target.classList.add('active');
+function filterByDifficulty(difficulty, evt = null) {
+    const currentEvent = evt || window.event;
+
+    // Update active difficulty button
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.classList.remove('active');
+    });
+
+    if (currentEvent?.target) {
+        currentEvent.target.classList.add('active');
+    }
             
             // Set current difficulty filter
             currentDifficultyFilter = difficulty;
@@ -2063,11 +2078,16 @@ function showSection(section) {
             }
         }
 
-        function setView(view) {
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
+function setView(view, evt = null) {
+    const currentEvent = evt || window.event;
+
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    if (currentEvent?.target) {
+        currentEvent.target.classList.add('active');
+    }
         }
 
         // Initialize with English and perfect images
